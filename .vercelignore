@@ -1,0 +1,10 @@
+.env
+.venv
+__pycache__
+*.pyc
+employee_tracking.db
+runtime_uploads
+android-voice-assistant
+rn-voice-assistant
+.git
+.github

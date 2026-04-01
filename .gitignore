@@ -1,0 +1,10 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+employee_tracking.db
+runtime_uploads/
+__pycache__/
+*.sqlite3
+*.db

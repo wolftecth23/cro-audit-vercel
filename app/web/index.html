@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRO Audit Engine</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Conversion Rate Optimization</p>
+        <h1>Audit a product page from a single screenshot.</h1>
+        <p class="hero-copy">
+          Upload one screenshot, add price and audience context, and get a CRO
+          score, confidence-aware findings, stronger rewrites, and the next
+          screenshots to capture if evidence is missing.
+        </p>
+      </section>
+
+      <section class="layout">
+        <form id="audit-form" class="panel form-panel">
+          <div class="panel-header">
+            <h2>Screenshot Audit</h2>
+            <p>
+              Screenshot-first by default. One screenshot can produce a useful
+              audit, and the app will call out what could not be verified.
+            </p>
+          </div>
+
+          <label class="field">
+            <span>Product Page Screenshot</span>
+            <input id="screenshot" name="screenshot" type="file" accept="image/*" />
+          </label>
+
+          <div id="screenshot-preview" class="screenshot-preview hidden">
+            <img id="preview-image" alt="Uploaded screenshot preview" />
+          </div>
+
+          <div class="grid-two">
+            <label class="field">
+              <span>Product Price</span>
+              <input id="product_price" name="product_price" type="number" min="0.01" step="0.01" value="39" required />
+            </label>
+
+            <label class="field">
+              <span>Device Focus</span>
+              <select id="device_focus" name="device_focus">
+                <option value="Mobile" selected>Mobile</option>
+                <option value="Desktop">Desktop</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Target Audience</span>
+            <input
+              id="target_audience"
+              name="target_audience"
+              type="text"
+              required
+              value="busy skincare shoppers"
+              placeholder="Busy parents, athletes, pet owners..."
+            />
+          </label>
+
+          <label class="field">
+            <span>Traffic Source</span>
+            <select id="traffic_source" name="traffic_source">
+              <option value="Facebook" selected>Facebook</option>
+              <option value="Google">Google</option>
+              <option value="Organic">Organic</option>
+              <option value="Email">Email</option>
+              <option value="Influencer">Influencer</option>
+            </select>
+          </label>
+
+          <label class="toggle-field">
+            <input id="save_image" name="save_image" type="checkbox" />
+            <span>Save uploaded screenshot with this audit</span>
+          </label>
+
+          <details class="advanced-panel">
+            <summary>Advanced fallback input</summary>
+            <p class="advanced-copy">
+              Optional URL or raw HTML for manual fallback when you do not want
+              to use a screenshot or when you want to compare both inputs.
+            </p>
+
+            <label class="field">
+              <span>Store URL</span>
+              <input
+                id="store_url"
+                name="store_url"
+                type="url"
+                placeholder="https://store.com/products/item"
+              />
+            </label>
+
+            <label class="field">
+              <span>Product Page HTML</span>
+              <textarea
+                id="product_page_html"
+                name="product_page_html"
+                rows="8"
+                placeholder="<html>...</html>"
+              ></textarea>
+            </label>
+          </details>
+
+          <button id="submit-button" class="primary-button" type="submit">
+            Run CRO Audit
+          </button>
+          <p id="form-status" class="form-status" aria-live="polite"></p>
+        </form>
+
+        <section class="panel results-panel">
+          <div id="empty-state" class="empty-state">
+            <h2>Your results will appear here</h2>
+            <p>
+              Run an audit to see the CRO score, biggest leak, prioritized fixes,
+              rewrites, confidence notes, and next screenshots to upload.
+            </p>
+          </div>
+
+          <div id="results" class="results hidden">
+            <div class="results-hero">
+              <div>
+                <p class="section-kicker">Audit Summary</p>
+                <h2 id="cro-score">CRO Score: 0</h2>
+                <p class="leak-label">Biggest leak</p>
+                <p id="biggest-leak" class="leak-copy"></p>
+                <p class="confidence-line">
+                  Confidence: <strong id="overall-confidence">high</strong>
+                </p>
+              </div>
+              <div class="score-badge">
+                <span id="score-badge-value">0</span>
+              </div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>Category Scores</h3>
+              </div>
+              <div id="category-scores" class="score-grid"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>Category Confidence</h3>
+              </div>
+              <div id="category-confidence" class="stack"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>High Priority Fixes</h3>
+              </div>
+              <div id="high-priority-fixes" class="stack"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>Medium Priority Fixes</h3>
+              </div>
+              <div id="medium-priority-fixes" class="stack"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>Low Priority Fixes</h3>
+              </div>
+              <div id="low-priority-fixes" class="stack"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>Rewrite Suggestions</h3>
+              </div>
+              <div id="rewrite-suggestions" class="rewrite-grid"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>A/B Test Ideas</h3>
+              </div>
+              <div id="ab-test-ideas" class="stack"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>Psychological Improvements</h3>
+              </div>
+              <div id="psychological-improvements" class="stack"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>Mobile Specific Improvements</h3>
+              </div>
+              <div id="mobile-improvements" class="stack"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>Missing Evidence Notes</h3>
+              </div>
+              <div id="missing-evidence-notes" class="stack"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>Recommended Next Uploads</h3>
+              </div>
+              <div id="recommended-next-uploads" class="stack"></div>
+            </div>
+
+            <div class="result-block">
+              <div class="block-header">
+                <h3>Analysis Notes</h3>
+              </div>
+              <div id="analysis-notes" class="stack"></div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
