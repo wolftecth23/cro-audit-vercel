@@ -58,11 +58,16 @@ app.include_router(cro.router, prefix="/api/v1")
 app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
 
 
-@app.get("/", tags=["Health"])
+@app.get("/", include_in_schema=False)
 def root():
-    return {"message": "Employee Tracking System API is running."}
+    return FileResponse(WEB_DIR / "index.html")
 
 
 @app.get("/cro-audit", include_in_schema=False)
 def cro_audit_page():
     return FileResponse(WEB_DIR / "index.html")
+
+
+@app.get("/health", tags=["Health"])
+def health():
+    return {"message": "Employee Tracking System API is running."}
